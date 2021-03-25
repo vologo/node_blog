@@ -2,11 +2,16 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { auth } from '@/api/user'
 import { Message } from 'element-ui'
+import NProgress from 'nprogress'// 引入nprogress
+import 'nprogress/nprogress.css' // 这个样式必须引入
+// 简单配置
+NProgress.inc(0.2)
+NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
 // import Login from '../views/admin/login/'
 // import Article from '../views/admin/article/'
 // import Home from '../views/admin/home'
 // import Layout from '../views/admin/layout'
-import { Base64 } from 'js-base64'
+// import { Base64 } from 'js-base64'
 // import { _encode } from '../utils/auth'
 // 在 VueCLI 创建的项目中 @ 表示 src 目录
 // 它是 src 目录的路径别名
@@ -19,6 +24,11 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
+    meta: {
+      title: '登录',
+      // 通过路由守卫 来判断noAuth 是否需要token验证
+      requiresAuth: false
+    },
     // component: (Login)
     component: () => import('@/views/admin/login/')
   },
@@ -37,53 +47,63 @@ const routes = [
         // 路由的名字是干啥的？
         // 参考：https://gitee.com/lipengzhou/toutiao-publish-admin/issues/I1F1BA
         name: 'home',
+        meta: { title: '首页', requiresAuth: true },
         component: () => import('@/views/admin/home/')
       },
       {
-        path: '/admin/advertise',
-        name: 'Advertise',
-        // 按需加载
-        component: () => import('@/views/admin/advertise/')
+        path: '/admin/users',
+        name: 'Users',
+        meta: { title: '用户-列表', requiresAuth: true },
+        component: () => import('@/views/admin/users/')
+      },
+      {
+        path: '/admin/categories',
+        name: 'Categories',
+        meta: { title: '分类-列表', requiresAuth: true },
+        component: () => import('@/views/admin/categories/')
       },
       {
         path: '/admin/article',
         name: 'Article',
+        meta: { title: '文章-列表', requiresAuth: true },
         component: () => import('@/views/admin/articles/')
       },
       {
         path: '/admin/publish',
         name: 'Publish',
+        meta: { title: '文章-创建', requiresAuth: true },
         component: () => import('@/views/admin/publish/')
-      },
-      {
-        path: '/admin/categories',
-        name: 'Categories',
-        component: () => import('@/views/admin/categories/')
       },
       {
         path: '/admin/comments',
         name: 'Comments',
+        meta: { title: '评论-列表', requiresAuth: true },
         component: () => import('@/views/admin/comments/')
       },
       {
         path: '/admin/replies',
         name: 'Replies',
+        meta: { title: '回复详情-列表', requiresAuth: true },
         component: () => import('@/views/admin/replies/')
       },
       {
-        path: '/admin/secitons',
-        name: 'Secitons',
-        component: () => import('@/views/admin/sections/')
-      },
-      {
-        path: '/admin/users',
-        name: 'Users',
-        component: () => import('@/views/admin/users/')
+        path: '/admin/advertise',
+        name: 'Advertise',
+        // 按需加载
+        meta: { title: '广告-列表', requiresAuth: true },
+        component: () => import('@/views/admin/advertise/')
       },
       {
         path: '/admin/test',
         name: 'Test',
+        meta: { title: '测试-列表', requiresAuth: true },
         component: () => import('@/views/admin/categories/test')
+      },
+      {
+        path: '/admin/404',
+        name: 'page404',
+        meta: { title: '404 - 页面不存在', requiresAuth: false },
+        component: () => import('@/views/admin/404')
       }
     ]
   }]
@@ -112,6 +132,10 @@ const router = new VueRouter({
 //   return 'Basic' + Base64.encode(token + ':')
 // }
 router.beforeEach(async (to, from, next) => {
+  // 进度条开始
+  NProgress.start()
+  // 设置title信息
+  document.title = to.meta.title ? to.meta.title + '-vologo.cn' : 'vologo.cn 后台'
   // 如果要访问的页面不是 /login，校验登录状态
   // 如果没有登录，则跳转到登录页面
   // 如果登录了，则允许通过
@@ -126,6 +150,10 @@ router.beforeEach(async (to, from, next) => {
       // 已登录，允许通过
       // 如果客户端有token 则验证 token是否有效
       auth().then(() => {
+        // 判断此跳转路由的来源路由是否存在，存在的情况跳转到来源路由，否则跳转到404页面
+        if (!to.matched.length) {
+          next('/admin/404')
+        }
         next()
       }).catch(error => {
         Message.error(error.data.msg || '未授权，请重新登录')
@@ -150,6 +178,10 @@ router.beforeEach(async (to, from, next) => {
       next()
     }
   }
+})
+router.afterEach(() => {
+  // 进度条结束
+  NProgress.done()
 })
 export default router
 // 我们在组件中使用的 this.$router 其实就是这个模块中的 router

@@ -297,15 +297,6 @@ export default {
     console.log(process.env.VUE_APP_REQUEST_URL + process.env.VUE_APP_BASE_API)
   },
   methods: {
-    // getWebName () {
-    //   getWebSiteName().then(response => {
-    //     // if (response.code === this.$ECode.SUCCESS) {
-    //     this.webSiteName = response.data
-    //     // }
-    //     console.log(this.getWebName)
-    //     console.log(process.env.VUE_APP_ADMIN_API)
-    //   })
-    // },
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },

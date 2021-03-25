@@ -13,7 +13,8 @@ import { Base64 } from 'js-base64'
 //   'Basic ' + Base64.encode(token + ':')
 const request = axios.create({
   // 判断当前的运行环境
-  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : 'https://www.boblog.com/api/v1',
+  // baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : 'https://www.boblog.com/api/v1',
+  baseURL: process.env.VUE_APP_REQUEST_URL + process.env.VUE_APP_BASE_API,
   // 开启proxy代理后使用下列数据
   // baseURL: '/api/v1',
   // 服务器开启了cors就不要开这个
