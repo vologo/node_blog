@@ -152,8 +152,19 @@ router.beforeEach(async (to, from, next) => {
     // if (store.) {
       // 已登录，允许通过
       // 如果客户端有token 则验证 token是否有效
-      auth().then(() => {
-        // 判断此跳转路由的来源路由是否存在，存在的情况跳转到来源路由，否则跳转到404页面
+      // auth().then(() => {
+      //   // 判断此跳转路由的来源路由是否存在，存在的情况跳转到来源路由，否则跳转到404页面
+      //   if (!to.matched.length) {
+      //     next('/admin/404')
+      //   }
+      //   next()
+      // }).catch(error => {
+      //   Message.error(error.data.msg || '未授权，请重新登录')
+      //   setTimeout(() => {
+      //     next('/login')
+      //   }, 1500)
+      // })
+      store.dispatch('user/Auth').then(() => {
         if (!to.matched.length) {
           next('/admin/404')
         }

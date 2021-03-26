@@ -163,6 +163,7 @@
 </template>
 <script>
 import { getCategory, createCategory, deleteCategory, getSingleCategory, setSingleCategory } from '@/api/category'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Categories',
   components: {},
@@ -170,7 +171,7 @@ export default {
   data () {
     return {
       search: '',
-      categoryList: [],
+      // categoryList: [],
       addCategorDialog: false,
       editCategorDialog: false,
       updataId: -1,
@@ -208,20 +209,23 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('category', ['categoryList'])
+  },
   watch: {},
   created () {
     // 请求首屏数据
-    this.loadCategory()
+    this.LoadCategory()
   },
   mounted () {
   },
   methods: {
     // 首屏数据请求 所有的分类
-    async loadCategory () {
-      const { data: res } = await getCategory()
-      this.categoryList = res.data
-    },
+    // async LoadCategory () {
+    //   const { data: res } = await getCategory()
+    //   this.categoryList = res.data
+    // },
+    ...mapActions('category', ['LoadCategory']),
     // 获取所编辑的分类数据
     async handleEdit (id, row) {
       this.editCategorDialog = true
@@ -240,7 +244,7 @@ export default {
         const { data: res } = await deleteCategory(index)
         console.log(res)
         this.$message.success(res.msg)
-        this.loadCategory()
+        this.LoadCategory()
       }).catch(() => {
         this.$message.info('已取消删除')
       })
@@ -255,7 +259,7 @@ export default {
         if (!valid) return this.$message.error('新增信息不正确，重新填写')
         const { data: res } = await createCategory(this.addForm)
         this.$message.success(res.data.msg)
-        this.loadCategory()
+        this.LoadCategory()
         this.addCategorDialog = false
       })
     },
@@ -271,7 +275,7 @@ export default {
         const { data: res } = await setSingleCategory(this.editForm, this.updataId)
         console.log(res)
         this.$message.success(res.msg)
-        this.loadCategory()
+        this.LoadCategory()
         this.editCategorDialog = false
       })
     },

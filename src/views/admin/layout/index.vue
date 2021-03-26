@@ -46,7 +46,8 @@
 </template>
 <script>
 import Aside from './components/Aside'
-import { auth } from '@/api/user'
+// import { auth } from '@/api/user'
+import { mapState } from 'vuex'
 export default {
   name: 'LayouIndex',
   components: {
@@ -56,7 +57,7 @@ export default {
   data () {
     return {
       isCollapse: false,
-      userInfo: {},
+      // userInfo: {},
       // 屏幕宽度
       screenWidth: document.body.clientWidth
       // 屏幕高度
@@ -68,6 +69,7 @@ export default {
     //   const { screenWidth, screenHeight } = this
     //   return { screenWidth, screenHeight }
     // }
+    ...mapState('user', ['userInfo'])
   },
   watch: {
     screenWidth (val) {
@@ -94,7 +96,7 @@ export default {
     }
   },
   created () {
-    this.loadUserInfo()
+    // this.loadUserInfo()
   },
   mounted () {
     const that = this
@@ -105,10 +107,10 @@ export default {
   },
   methods: {
     // 载入管理员信息
-    async loadUserInfo () {
-      const { data: res } = await auth()
-      this.userInfo = res.data
-    },
+    // async loadUserInfo () {
+    //   const { data: res } = await auth()
+    //   this.userInfo = res.data
+    // },
     // 退出功能
     logout () {
       this.$confirm('确定退出管理系统?', '提示', {
@@ -117,7 +119,7 @@ export default {
         type: 'warning'
       }).then(async () => {
         // window.localStorage.removeItem('user')
-        this.$store.commit('user/clearUser')
+        this.$store.commit('user/DEL_TOKEN')
         this.$router.replace('/login')
         this.$message.success('已退出管理系统')
       }).catch(() => {

@@ -68,7 +68,7 @@ error => {
     // 清除本地存储中的用户登录状态
     // Vue.ls.remove('token')
     // window.localStorage.removeItem('user')
-    store.commit('user/clearUser')
+    store.commit('user/DEL_TOKEN')
     // 跳转到登录页面
       .Message.error(response.data.msg)
     // 避免router跳转到原位置
@@ -77,7 +77,7 @@ error => {
   } else if (response.status === 403) {
     // Vue.ls.remove('token')
     // window.localStorage.removeItem('user')
-    store.commit('user/clearUser')
+    store.commit('user/DEL_TOKEN')
     Message.error(`没有操作权限, ${response.data.msg}`)
     router.replace('/login')
     // 500：服务器错误。

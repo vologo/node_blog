@@ -47,16 +47,19 @@
           fit
         />
         <el-table-column
-          prop="target_id"
-          label="评论目标id"
+          prop="article.title"
+          label="评论的文章"
           fit
           sortable
         />
         <el-table-column
-          prop="target_type"
           label="文章类型"
           fit
-        />
+        >
+          <template slot-scope="scope">
+            {{ scope.row.target_type === 'article' ? '文章' : '专栏' }}
+          </template>
+        </el-table-column>
         <el-table-column
           label="操作"
           width="200"

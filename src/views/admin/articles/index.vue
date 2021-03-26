@@ -212,6 +212,7 @@
 <script>
 import { getArticle, deleteArticle, queryArticle } from '@/api/article'
 import { getCategory } from '@/api/category'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Article',
   // components: { ElImageViewer },
@@ -219,7 +220,7 @@ export default {
   data () {
     return {
       articleList: [],
-      categoryList: [],
+      // categoryList: [],
       loading: true,
       // 表头搜索
       search: '',
@@ -234,19 +235,18 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('category', ['categoryList'])
+  },
   watch: {},
   created () {
     this.loadArticle()
-    this.loadCategory()
+    this.LoadCategory()
   },
   mounted () { },
   methods: {
     // 首屏数据请求 所有的分类
-    async loadCategory () {
-      const { data: res } = await getCategory()
-      this.categoryList = res.data
-    },
+    ...mapActions('category', ['LoadCategory']),
     // 获取所有的文章
     async loadArticle () {
       console.log(this.queryForm)

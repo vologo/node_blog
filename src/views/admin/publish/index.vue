@@ -172,6 +172,7 @@
 import { createArticle, getSingleArticle, setSingleArticle, getQnToken } from '@/api/article'
 import { getCategory } from '@/api/category'
 import { mavonEditor } from 'mavon-editor'
+import { mapState, mapActions } from 'vuex'
 // import { getUploadToken } from '../../../utils/upload'
 import 'mavon-editor/dist/css/index.css'
 export default {
@@ -250,14 +251,16 @@ export default {
           },
           { required: true, message: '请上传封面', trigger: 'change' }
         ]
-      },
-      categoryList: []
+      }
+      // categoryList: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('category', ['categoryList'])
+  },
   watch: {},
   created () {
-    this.loadCategory()
+    this.LoadCategory()
     this.loadQnToken()
     // 由于我们让发布和修改使用的同一个组件
     // 所以这里要判断
@@ -270,10 +273,7 @@ export default {
   mounted () { },
   methods: {
     // 首屏数据请求 所有的分类
-    async loadCategory () {
-      const { data: res } = await getCategory()
-      this.categoryList = res.data
-    },
+    ...mapActions('category', ['LoadCategory']),
     // 发布文章
     publishArticle () {
       this.loading = true

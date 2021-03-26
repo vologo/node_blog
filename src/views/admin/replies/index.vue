@@ -274,10 +274,9 @@ export default {
       // target_id: 12
       // target_type: "article"
       const { data: res } = await getSingleComment(this.$route.query.id)
-      const { data: res1 } = await getReply({ comment_id: this.$route.query.id })
       console.log(res)
       this.commentDetail = [res.data]
-      this.replyList = res1.data
+      this.replyList = res.data.reply
       // this.commentDetail[0].created_at = res.data.created_at
     },
     // 翻页功能

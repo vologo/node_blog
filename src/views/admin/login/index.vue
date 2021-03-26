@@ -301,7 +301,7 @@ export default {
   },
   methods: {
     // 取别名 add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
-    ...mapMutations({ setUserToken: 'user/updateUser' }),
+    ...mapMutations({ setUserToken: 'user/SET_TOKEN' }),
     // ...mapMutations(['user/updateUser']),
     // 重置表单
     resetForm (formName) {
