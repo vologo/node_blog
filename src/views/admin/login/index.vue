@@ -216,6 +216,8 @@
 </template>
 <script>
 import { login, register } from '@/api/user'
+// 导入actions异步方法
+import { mapMutations } from 'vuex'
 import axios from 'axios'
 export default {
   name: 'Login',
@@ -295,8 +297,13 @@ export default {
   },
   mounted () {
     console.log(process.env.VUE_APP_REQUEST_URL + process.env.VUE_APP_BASE_API)
+    console.log(this.setUserToken)
   },
   methods: {
+    // 取别名 add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    ...mapMutations({ setUserToken: 'user/updateUser' }),
+    // ...mapMutations(['user/updateUser']),
+    // 重置表单
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
@@ -310,8 +317,9 @@ export default {
         }
         login(this.loginForm).then(res => {
           this.loginLoading = false
-          console.log(res)
-          window.localStorage.setItem('user', JSON.stringify(res.data.token))
+          console.log(res.data.token)
+          // window.localStorage.setItem('user', JSON.stringify(res.data.token))
+          this.setUserToken(res.data.token)
           // this.$ls.set('token', res.data.token)
           this.$router.push('/admin')
           this.$message.success(res.data.msg)

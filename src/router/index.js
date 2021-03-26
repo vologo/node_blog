@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '@/store/'
 import VueRouter from 'vue-router'
 import { auth } from '@/api/user'
 import { Message } from 'element-ui'
@@ -142,11 +143,13 @@ router.beforeEach(async (to, from, next) => {
   // 允许通过
   // next()
   // 校验非登录页面的登录状态
-  const user = JSON.parse(window.localStorage.getItem('user'))
+  // const user = JSON.parse(window.localStorage.getItem('user'))
   console.log(to)
   console.log(from)
   if (to.path !== '/login') {
-    if (user) {
+    // 使用vuex下的数据
+    if (store.state.user.userToken) {
+    // if (store.) {
       // 已登录，允许通过
       // 如果客户端有token 则验证 token是否有效
       auth().then(() => {
@@ -170,7 +173,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 如果已经登录就不能到登录页面
-    if (user) {
+    if (store.state.user.userToken) {
       next('/admin')
       Message.info('已登录')
     } else {

@@ -1,6 +1,7 @@
 import axios from 'axios'
 // import store from '../vuex'
 import { Message } from 'element-ui'
+import store from '@/store/'
 // import Vue from 'vue'
 import router from '@/router'
 import { Base64 } from 'js-base64'
@@ -33,9 +34,9 @@ request.interceptors.request.use(config => {
   // 任何所有请求会经过这里
   // config 是当前请求相关的配置信息对象
   // config 是可以修改的
-  const user = JSON.parse(window.localStorage.getItem('user'))
-  if (user) {
-    const token = Base64.encode(user + ':')
+  // const user = JSON.parse(window.localStorage.getItem('user'))
+  if (store.state.user.userToken) {
+    const token = Base64.encode(store.state.user.userToken + ':')
     config.headers.Authorization = 'Basic ' + token
   }
   // 获取本地的token信息
@@ -66,15 +67,17 @@ error => {
     // 鉴权失败，自动清除token
     // 清除本地存储中的用户登录状态
     // Vue.ls.remove('token')
-    window.localStorage.removeItem('user')
+    // window.localStorage.removeItem('user')
+    store.commit('user/clearUser')
     // 跳转到登录页面
-    Message.error(response.data.msg)
+      .Message.error(response.data.msg)
     // 避免router跳转到原位置
     if (response.data.error_code !== 10004) { router.replace('/login') }
     // 403：请求的资源不允许访问。就是说没有权限。
   } else if (response.status === 403) {
     // Vue.ls.remove('token')
-    window.localStorage.removeItem('user')
+    // window.localStorage.removeItem('user')
+    store.commit('user/clearUser')
     Message.error(`没有操作权限, ${response.data.msg}`)
     router.replace('/login')
     // 500：服务器错误。

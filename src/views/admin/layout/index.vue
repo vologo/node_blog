@@ -116,7 +116,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        window.localStorage.removeItem('user')
+        // window.localStorage.removeItem('user')
+        this.$store.commit('user/clearUser')
         this.$router.replace('/login')
         this.$message.success('已退出管理系统')
       }).catch(() => {
